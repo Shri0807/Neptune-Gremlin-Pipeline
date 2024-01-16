@@ -1,0 +1,17 @@
+S3: &s3
+  s3_conn_id: ""
+  s3_bucket_name: ""
+  s3_nodes_file_name: ""
+  s3_edges_file_name: ""
+
+Filepaths: &Filepaths
+  local_file_path: ""
+  nodes_local_path: ""
+  edges_local_path: ""
+  nodes_file_name: ""
+  edges_file_name: ""
+
+development: &dev
+  <<: *s3
+  <<: *Filepaths
+
