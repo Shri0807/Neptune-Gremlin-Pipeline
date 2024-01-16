@@ -1,5 +1,5 @@
 S3: &s3
-  s3_conn_id: ""
+  s3_conn_id: "S3_connection"
   s3_bucket_name: ""
   s3_nodes_file_name: ""
   s3_edges_file_name: ""
