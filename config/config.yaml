@@ -1,13 +1,13 @@
 S3: &s3
   s3_conn_id: "S3_connection"
-  s3_bucket_name: ""
-  s3_nodes_file_name: ""
-  s3_edges_file_name: ""
+  s3_bucket_name: "gremlins-data"
+  s3_nodes_file_name: "20230831_nodes_neptune.csv"
+  s3_edges_file_name: "20230831_edges_neptune.csv"
 
 Filepaths: &Filepaths
-  local_file_path: ""
-  nodes_local_path: ""
-  edges_local_path: ""
+  local_file_path: "/root/data/"
+  nodes_local_path: "/root/data/nodes/"
+  edges_local_path: "/root/data/edges"
   nodes_file_name: ""
   edges_file_name: ""
 
