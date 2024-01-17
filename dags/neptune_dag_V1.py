@@ -1,12 +1,13 @@
-from datetime import datetime, timedelta
-from airflow import DAG
-from airflow.operators.python_operator import PythonOperator
-# from helper_funcs.s3_funcs import read_file_from_s3, rename_file
-# from read_config import read_yaml
-# from helper_funcs.preprocess_funcs import preprocess_nodes
 import sys
 
 sys.path.insert(0, "/root/Neptune-Gremlin-Pipeline/helper_funcs")
+sys.path.insert(0, "/root/Neptune-Gremlin-Pipeline/graph_funcs")
+
+from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
+
+from s3_funcs import read_file_from_s3
 from read_config import read_yaml
 
 config = read_yaml("/root/Neptune-Gremlin-Pipeline/config/config.yaml")
@@ -21,35 +22,24 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
-def test1(**kwargs):
-    print(kwargs["s3_conn_id"])
-
 with DAG(
     default_args=default_args,
     dag_id="neptune_dag_v1",
     description="A DAG to read data from S3, preprocess it and load it to amazon neptune"
 ) as dag:
     
-    task1 = PythonOperator(
-        task_id = "test", 
-        python_callable=test1,
-        op_kwargs={"s3_conn_id":config["s3_conn_id"]}
+    download_from_s3_task = PythonOperator(
+        task_id = "download_from_s3_task",
+        python_callable=read_file_from_s3,
+        op_kwargs={
+            's3_conn_id': config['s3_conn_id'],
+            's3_bucket_name': config['s3_bucket_name'],
+            's3_nodes_file_name': config['s3_nodes_file_name'],
+            'local_nodes_file_path': config['nodes_local_path'],
+            's3_edges_file_name': config['s3_edges_file_name'],
+            'local_edges_file_path': config['edges_local_path']
+        }
     )
-    
-    task1
-    
-    # download_from_s3_task = PythonOperator(
-    #     task_id = "download_from_s3_task",
-    #     python_callable=read_file_from_s3,
-    #     op_kwargs={
-    #         's3_conn_id': config['s3_conn_id'],
-    #         's3_bucket_name': config['s3_bucket_name'],
-    #         's3_nodes_file_name': config['s3_nodes_file_name'],
-    #         'local_nodes_file_path': config['nodes_local_path'],
-    #         's3_edges_file_name': config['s3_edges_file_name'],
-    #         'local_edges_file_path': config['edges_local_path']
-    #     }
-    # )
 
     # rename_file = PythonOperator(
     #     task_id = "rename_file",
@@ -70,7 +60,7 @@ with DAG(
 
     # )
 
-    # download_from_s3_task >> rename_file
+    download_from_s3_task
 
 
 
