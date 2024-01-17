@@ -8,12 +8,12 @@ def read_file_from_s3(**kwargs):
 
     # Download the file from S3 to the local file system
     try:
-        s3_hook.download_file(kwargs["s3_bucket_name"], kwargs["s3_nodes_file_name"], kwargs["local_nodes_file_path"])
+        s3_hook.download_file(bucket_name=kwargs["s3_bucket_name"], key=kwargs["s3_nodes_file_name"], local_path=kwargs["local_nodes_file_path"], preserve_file_name=True)
     except Exception as e:
         print("Nodes Download Failed")
 
     try:
-        s3_hook.download_file(kwargs["s3_bucket_name"], kwargs["s3_edges_file_name"], kwargs["local_edges_file_path"])
+        s3_hook.download_file(bucket_name=kwargs["s3_bucket_name"], key=kwargs["s3_edges_file_name"], local_path=kwargs["local_edges_file_path"], preserve_file_name=True)
     except Exception as e:
         print("Edges Download Failed")
 
