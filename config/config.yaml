@@ -7,7 +7,7 @@ S3: &s3
 Filepaths: &Filepaths
   local_file_path: "/root/data/"
   nodes_local_path: "/root/data/nodes/"
-  edges_local_path: "/root/data/edges"
+  edges_local_path: "/root/data/edges/"
   nodes_file_name: ""
   edges_file_name: ""
 
