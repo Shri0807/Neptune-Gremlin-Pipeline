@@ -1,4 +1,4 @@
-from airflow.hooks.S3_hook import S3Hook
+from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 import os
 
 # Define the function to read the file from S3
