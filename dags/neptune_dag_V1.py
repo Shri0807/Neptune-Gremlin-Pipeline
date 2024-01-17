@@ -2,10 +2,14 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 # from helper_funcs.s3_funcs import read_file_from_s3, rename_file
-from .helper_funcs.read_config import read_yaml
+# from read_config import read_yaml
 # from helper_funcs.preprocess_funcs import preprocess_nodes
+import sys
 
-config = read_yaml("../config/config.yaml")
+sys.path.insert(0, "/root/Neptune-Gremlin-Pipeline/helper_funcs")
+from read_config import read_yaml
+
+config = read_yaml("/root/Neptune-Gremlin-Pipeline/config/config.yaml")
 config = config['development']
 
 # Define default_args dictionary to specify the default parameters for the DAG
@@ -17,8 +21,8 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
-def test1(s3_conn_id):
-    print(s3_conn_id)
+def test1(**kwargs):
+    print(kwargs["s3_conn_id"])
 
 with DAG(
     default_args=default_args,
@@ -29,7 +33,7 @@ with DAG(
     task1 = PythonOperator(
         task_id = "test", 
         python_callable=test1,
-        op_kwargs={s3_conn_id:config["s3_conn_id"]}
+        op_kwargs={"s3_conn_id":config["s3_conn_id"]}
     )
     
     task1
