@@ -9,7 +9,7 @@ from airflow.operators.python_operator import PythonOperator
 
 from s3_funcs import read_file_from_s3
 from read_config import read_yaml
-from preprocess_funcs import preprocess_nodes
+from preprocess_funcs import preprocess_nodes ,preprocess_edges
 
 config = read_yaml("/root/Neptune-Gremlin-Pipeline/config/config.yaml")
 config = config['development']
@@ -51,6 +51,16 @@ with DAG(
             'preprocessed_nodes_file_name': config['preprocessed_nodes_file_name']
         }
 
+    )
+
+    edges_preprocess_task = PythonOperator(
+        task_id = "edges_preprocess_task",
+        python_callable=preprocess_edges,
+        op_kwargs={
+            'edges_local_path': config['edges_local_path'],
+            's3_edges_file_name': config['s3_edges_file_name'],
+            'preprocessed_edges_file_name': config['preprocessed_edges_file_name']
+        }
     )
 
     # preprocess_nodes = PythonOperator(
