@@ -25,3 +25,4 @@ def preprocess_edges(**kwargs):
     df_edges = df_edges.replace(to_replace=r'\s+', value=' ', regex=True)
     df_edges["~from"] = df_edges["~from"].astype(str)
     df_edges["~to"] = df_edges["~to"].astype(str)
+    df_edges.to_csv(edges_final_path, index=False)
