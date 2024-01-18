@@ -74,6 +74,7 @@ with DAG(
     # )
 
     download_from_s3_task >> nodes_preprocess_task
+    download_from_s3_task >> edges_preprocess_task
 
 
 
