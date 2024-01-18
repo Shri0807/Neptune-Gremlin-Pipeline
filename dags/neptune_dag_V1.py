@@ -9,6 +9,7 @@ from airflow.operators.python_operator import PythonOperator
 
 from s3_funcs import read_file_from_s3
 from read_config import read_yaml
+from preprocess_funcs import preprocess_nodes
 
 config = read_yaml("/root/Neptune-Gremlin-Pipeline/config/config.yaml")
 config = config['development']
@@ -41,14 +42,16 @@ with DAG(
         }
     )
 
-    # rename_file = PythonOperator(
-    #     task_id = "rename_file",
-    #     python_callable=rename_file,
-    #     op_kwargs={
-    #         'new_nodes_name': config['nodes_file_name'],
-    #         'new_edges_name': config['edges_file_name']
-    #     }
-    # )
+    nodes_preprocess_task = PythonOperator(
+        task_id = "nodes_preprocess_task",
+        python_callable=preprocess_nodes,
+        op_kwargs={
+            'nodes_local_path': config['nodes_local_path'],
+            's3_nodes_file_name': config['s3_nodes_file_name'],
+            'preprocessed_nodes_file_name': config['preprocessed_nodes_file_name']
+        }
+
+    )
 
     # preprocess_nodes = PythonOperator(
     #     task_id="preprocess_nodes",
@@ -60,7 +63,7 @@ with DAG(
 
     # )
 
-    download_from_s3_task
+    download_from_s3_task >> nodes_preprocess_task
 
 
 
