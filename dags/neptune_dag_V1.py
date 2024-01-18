@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 
-from s3_funcs import read_file_from_s3
+from s3_funcs import read_file_from_s3 ,load_file_to_s3
 from read_config import read_yaml
 from preprocess_funcs import preprocess_nodes ,preprocess_edges
 
@@ -63,18 +63,22 @@ with DAG(
         }
     )
 
-    # preprocess_nodes = PythonOperator(
-    #     task_id="preprocess_nodes",
-    #     python_callable=preprocess_nodes,
-    #     op_kwargs={
-    #         'local_nodes_file_path': config['nodes_local_path'],
-    #         'new_nodes_name': config['nodes_file_name']
-    #     }
+    load_to_s3_task = PythonOperator(
+        task_id = "load_to_s3_task",
+        python_callable=load_file_to_s3,
+        op_kwargs={
+            's3_conn_id': config['s3_conn_id'],
+            's3_bucket_name': config['s3_bucket_name'],
+            'nodes_local_path': config['nodes_local_path'],
+            'preprocessed_nodes_file_name': config['preprocessed_nodes_file_name'],
+            'edges_local_path': config['edges_local_path'],
+            'preprocessed_edges_file_name': config['preprocessed_edges_file_name']
+        }
+    )
 
-    # )
+    download_from_s3_task >> [nodes_preprocess_task, edges_preprocess_task]
+    [nodes_preprocess_task, edges_preprocess_task] >> load_to_s3_task
 
-    download_from_s3_task >> nodes_preprocess_task
-    download_from_s3_task >> edges_preprocess_task
 
 
 

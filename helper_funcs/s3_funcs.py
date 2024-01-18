@@ -17,14 +17,14 @@ def read_file_from_s3(**kwargs):
     except Exception as e:
         print("Edges Download Failed")
 
-def rename_file(new_nodes_name, new_edges_name, ti):
-    downloaded_file_name = ti.xcom_pull(task_ids='download_from_s3_task', key='local_nodes_file_path')
-    downloaded_file_path = '/'.join(downloaded_file_name[0].split('/')[:-1])
-    os.rename(src=downloaded_file_name[0], dst=f"{downloaded_file_path}/{new_nodes_name}")
+def load_file_to_s3(**kwargs):
+    s3_hook = S3Hook(aws_conn_id=kwargs["s3_conn_id"])
 
-    downloaded_file_name = ti.xcom_pull(task_ids='download_from_s3_task', key='local_edges_file_path')
-    downloaded_file_path = '/'.join(downloaded_file_name[0].split('/')[:-1])
-    os.rename(src=downloaded_file_name[0], dst=f"{downloaded_file_path}/{new_edges_name}")
+    filename = kwargs["nodes_local_path"] + kwargs["preprocessed_nodes_file_name"]
+    s3_hook.load_file(filename=filename, bucket_name=kwargs["s3_bucket_name"], key=kwargs["s3_nodes_file_name"], replace=True)
+
+    filename = kwargs["edges_local_path"] + kwargs["preprocessed_edges_file_name"]
+    s3_hook.load_file(filename=filename, bucket_name=kwargs["s3_bucket_name"], key=kwargs["s3_edges_file_name"], replace=True)
 
 
     
