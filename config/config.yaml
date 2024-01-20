@@ -11,6 +11,13 @@ Filepaths: &Filepaths
   preprocessed_nodes_file_name: "20230831_nodes_neptune_final.csv"
   preprocessed_edges_file_name: "20230831_edges_neptune_final.csv"
 
+Neptune: &Neptune
+  port: 8182
+  server: "neptune-database-1.cluster-c7w9wbbkmgi2.us-east-2.neptune.amazonaws.com"
+  loading_endpoint: "loader"
+  gremlin_endpoint: "gremlin"
+  iam_role: "arn:aws:iam::118852682248:role/NeptuneLoadFromS3"
+  
 development: &dev
   <<: *s3
   <<: *Filepaths

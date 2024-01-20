@@ -11,6 +11,8 @@ from s3_funcs import read_file_from_s3 ,load_file_to_s3
 from read_config import read_yaml
 from preprocess_funcs import preprocess_nodes ,preprocess_edges
 
+from load_data import load_data_neptune
+
 config = read_yaml("/root/Neptune-Gremlin-Pipeline/config/config.yaml")
 config = config['development']
 
@@ -73,6 +75,19 @@ with DAG(
             'preprocessed_nodes_file_name': config['preprocessed_nodes_file_name'],
             'edges_local_path': config['edges_local_path'],
             'preprocessed_edges_file_name': config['preprocessed_edges_file_name']
+        }
+    )
+
+    load_to_neptune = PythonOperator(
+        task_id = "load_to_neptune",
+        python_callable=load_data_neptune,
+        op_kwargs={
+            's3_bucket_name': config['s3_bucket_name'],
+            'preprocessed_nodes_file_name': config['preprocessed_nodes_file_name'],
+            'server': config['server'],
+            'port': config['port'],
+            'loading_endpoint': config['loading_endpoint'],
+            'iam_role': config['iam_role']
         }
     )
 
