@@ -93,7 +93,7 @@ with DAG(
 
     download_from_s3_task >> [nodes_preprocess_task, edges_preprocess_task]
     [nodes_preprocess_task, edges_preprocess_task] >> load_to_s3_task
-
+    load_to_s3_task >> load_to_neptune
 
 
 
