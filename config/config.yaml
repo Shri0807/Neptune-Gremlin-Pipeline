@@ -17,8 +17,9 @@ Neptune: &Neptune
   loading_endpoint: "loader"
   gremlin_endpoint: "gremlin"
   iam_role: "arn:aws:iam::118852682248:role/NeptuneLoadFromS3"
-  
+
 development: &dev
   <<: *s3
   <<: *Filepaths
+  <<: *Neptune
 
