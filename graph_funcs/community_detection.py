@@ -1,7 +1,11 @@
 import igraph as ig
 import pandas as pd
 
-def leiden_comm(df):
+def leiden_comm(**kwargs):
+
+    edges_path = kwargs["edges_local_path"] + kwargs["preprocessed_edges_file_name"]
+
+    df = pd.read_csv(edges_path)
     # Create a graph from the results returned
     g = ig.Graph.TupleList(df.itertuples(index=False), directed=False, weights=True)
 

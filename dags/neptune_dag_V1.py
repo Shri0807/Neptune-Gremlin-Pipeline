@@ -13,6 +13,7 @@ from preprocess_funcs import preprocess_nodes ,preprocess_edges
 
 from load_data import load_data_neptune
 from shortest_path import shortest_path
+from community_detection import leiden_comm
 
 config = read_yaml("/root/Neptune-Gremlin-Pipeline/config/config.yaml")
 config = config['development']
@@ -104,10 +105,19 @@ with DAG(
         }
     )
 
+    community_detection_task = PythonOperator(
+        task_id = "community_detection_task",
+        python_callable=leiden_comm,
+        op_kwargs={
+           'edges_local_path': config['edges_local_path'],
+           'preprocessed_edges_file_name': config['preprocessed_edges_file_name'], 
+        }
+    )
+
     download_from_s3_task >> [nodes_preprocess_task, edges_preprocess_task]
     [nodes_preprocess_task, edges_preprocess_task] >> load_to_s3_task
     load_to_s3_task >> load_to_neptune
-    load_to_neptune >> shortest_path_task
+    load_to_neptune >> [shortest_path_task, community_detection_task]
 
 
 
