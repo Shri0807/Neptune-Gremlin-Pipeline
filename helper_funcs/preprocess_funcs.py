@@ -26,3 +26,12 @@ def preprocess_edges(**kwargs):
     df_edges["~from"] = df_edges["~from"].astype(str)
     df_edges["~to"] = df_edges["~to"].astype(str)
     df_edges.to_csv(edges_final_path, index=False)
+
+def final_df_creation(**kwargs):
+    df_nodes = kwargs['ti'].xcom_pull(task_ids='shortest_path_task')
+    new_df = kwargs['ti'].xcom_pull(task_ids='community_detection_task')
+
+    new_df = pd.merge(new_df, df_nodes, on="~id", how="left")
+
+    return new_df
+
