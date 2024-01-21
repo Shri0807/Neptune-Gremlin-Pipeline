@@ -1,0 +1,26 @@
+S3: &s3
+  s3_conn_id: "S3_connection"
+  s3_bucket_name: "gremlins-data"
+  s3_nodes_file_name: "20230831_nodes_neptune.csv"
+  s3_edges_file_name: "20230831_edges_neptune.csv"
+
+Filepaths: &Filepaths
+  local_file_path: "/root/data/"
+  nodes_local_path: "/root/data/nodes/"
+  edges_local_path: "/root/data/edges/"
+  preprocessed_nodes_file_name: "20230831_nodes_neptune_final.csv"
+  preprocessed_edges_file_name: "20230831_edges_neptune_final.csv"
+  output_file_name: "community_output.csv"
+
+Neptune: &Neptune
+  port: 8182
+  server: "neptune-database-1.cluster-c7w9wbbkmgi2.us-east-2.neptune.amazonaws.com"
+  loading_endpoint: "loader"
+  gremlin_endpoint: "gremlin"
+  iam_role: "arn:aws:iam::118852682248:role/NeptuneLoadFromS3"
+
+development: &dev
+  <<: *s3
+  <<: *Filepaths
+  <<: *Neptune
+
