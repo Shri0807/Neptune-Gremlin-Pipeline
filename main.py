@@ -1,5 +1,5 @@
 from graph_funcs.load_data import load_data
-from helper_funcs.connect_to_neptune import connect_to_neptune
+from graph_funcs.connect_to_neptune import connect_to_neptune
 from graph_funcs.shortest_path import shortest_path
 from graph_funcs.community_detection import leiden_comm
 import pandas as pd

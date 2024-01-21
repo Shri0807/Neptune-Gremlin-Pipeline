@@ -1,13 +1,6 @@
 import pandas as pd
 import requests, json
 
-#port = 8182
-#server = "neptune-database-1.cluster-c7w9wbbkmgi2.us-east-2.neptune.amazonaws.com"
-#endpoint = f"https://{server}:{port}/loader"
-
-#iam_role = "arn:aws:iam::118852682248:role/NeptuneLoadFromS3"
-
-# def load_data(source, endpoint = "https://neptune-database-1.cluster-c7w9wbbkmgi2.us-east-2.neptune.amazonaws.com:8182/loader", iam_role = "arn:aws:iam::118852682248:role/NeptuneLoadFromS3"):
 def load_data_neptune(**kwargs):
     """
     Parameters:

@@ -12,6 +12,7 @@ from read_config import read_yaml
 from preprocess_funcs import preprocess_nodes ,preprocess_edges
 
 from load_data import load_data_neptune
+from shortest_path import shortest_path
 
 config = read_yaml("/root/Neptune-Gremlin-Pipeline/config/config.yaml")
 config = config['development']
@@ -91,9 +92,22 @@ with DAG(
         }
     )
 
+    shortest_path_task = PythonOperator(
+        task_id = "shortest_path_task",
+        python_callable=shortest_path,
+        op_kwargs={
+            'nodes_local_path': config['nodes_local_path'],
+            'preprocessed_nodes_file_name': config['preprocessed_nodes_file_name'],
+            'server': config['server'],
+            'port': config['port'],
+            'gremlin_endpoint': config['gremlin_endpoint']
+        }
+    )
+
     download_from_s3_task >> [nodes_preprocess_task, edges_preprocess_task]
     [nodes_preprocess_task, edges_preprocess_task] >> load_to_s3_task
     load_to_s3_task >> load_to_neptune
+    load_data_neptune >> shortest_path_task
 
 
 
