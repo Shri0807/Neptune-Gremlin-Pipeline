@@ -33,5 +33,6 @@ def final_df_creation(**kwargs):
 
     new_df = pd.merge(new_df, df_nodes, on="~id", how="left")
 
-    return new_df
+    final_path = kwargs['local_file_path'] + kwargs['output_file_name']
 
+    new_df.to_csv(final_path, index=False)

@@ -10,6 +10,7 @@ Filepaths: &Filepaths
   edges_local_path: "/root/data/edges/"
   preprocessed_nodes_file_name: "20230831_nodes_neptune_final.csv"
   preprocessed_edges_file_name: "20230831_edges_neptune_final.csv"
+  output_file_name: "community_output.csv"
 
 Neptune: &Neptune
   port: 8182

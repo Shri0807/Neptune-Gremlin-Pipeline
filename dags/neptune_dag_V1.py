@@ -9,7 +9,7 @@ from airflow.operators.python_operator import PythonOperator
 
 from s3_funcs import read_file_from_s3 ,load_file_to_s3
 from read_config import read_yaml
-from preprocess_funcs import preprocess_nodes ,preprocess_edges
+from preprocess_funcs import preprocess_nodes, preprocess_edges, final_df_creation
 
 from load_data import load_data_neptune
 from shortest_path import shortest_path
@@ -114,10 +114,19 @@ with DAG(
         }
     )
 
+    final_df_creation_task = PythonOperator(
+        task_id = "final_df_creation_task",
+        python_callable=final_df_creation,
+        op_kwargs={
+            'local_file_path': config['local_file_path'],
+            'output_file_name': config['output_file_name']
+        }
+    )
     download_from_s3_task >> [nodes_preprocess_task, edges_preprocess_task]
     [nodes_preprocess_task, edges_preprocess_task] >> load_to_s3_task
     load_to_s3_task >> load_to_neptune
     load_to_neptune >> [shortest_path_task, community_detection_task]
+    [shortest_path_task, community_detection_task] >> final_df_creation_task
 
 
 
