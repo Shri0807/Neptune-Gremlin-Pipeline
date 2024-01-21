@@ -8,7 +8,7 @@ def leiden_comm(**kwargs):
     df = pd.read_csv(edges_path) 
 
     print(df.head(10))
-    # df['weight'] = df['weight'].astype(int)
+    df['weight:Int'] = df['weight:Int'].astype(int)
     # Create a graph from the results returned
     g = ig.Graph.TupleList(df.itertuples(index=False), directed=False, weights=True)
 
