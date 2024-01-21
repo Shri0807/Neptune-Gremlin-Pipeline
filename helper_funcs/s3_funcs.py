@@ -20,11 +20,11 @@ def read_file_from_s3(**kwargs):
 def load_file_to_s3(**kwargs):
     s3_hook = S3Hook(aws_conn_id=kwargs["s3_conn_id"])
 
-    filename = kwargs["nodes_local_path"] + kwargs["preprocessed_nodes_file_name"]
-    s3_hook.load_file(filename=filename, bucket_name=kwargs["s3_bucket_name"], key=kwargs["preprocessed_nodes_file_name"], replace=True)
+    filename = kwargs["file_local_path"] + kwargs["preprocessed_file_name"]
+    s3_hook.load_file(filename=filename, bucket_name=kwargs["s3_bucket_name"], key=kwargs["preprocessed_file_name"], replace=True)
 
-    filename = kwargs["edges_local_path"] + kwargs["preprocessed_edges_file_name"]
-    s3_hook.load_file(filename=filename, bucket_name=kwargs["s3_bucket_name"], key=kwargs["preprocessed_edges_file_name"], replace=True)
+    # filename = kwargs["edges_local_path"] + kwargs["preprocessed_edges_file_name"]
+    # s3_hook.load_file(filename=filename, bucket_name=kwargs["s3_bucket_name"], key=kwargs["preprocessed_edges_file_name"], replace=True)
 
 
     

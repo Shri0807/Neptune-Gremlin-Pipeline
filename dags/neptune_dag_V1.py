@@ -67,16 +67,25 @@ with DAG(
         }
     )
 
-    load_to_s3_task = PythonOperator(
-        task_id = "load_to_s3_task",
+    load_nodes_to_s3_task = PythonOperator(
+        task_id = "load_nodes_to_s3_task",
         python_callable=load_file_to_s3,
         op_kwargs={
             's3_conn_id': config['s3_conn_id'],
             's3_bucket_name': config['s3_bucket_name'],
-            'nodes_local_path': config['nodes_local_path'],
-            'preprocessed_nodes_file_name': config['preprocessed_nodes_file_name'],
-            'edges_local_path': config['edges_local_path'],
-            'preprocessed_edges_file_name': config['preprocessed_edges_file_name']
+            'file_local_path': config['nodes_local_path'],
+            'preprocessed_file_name': config['preprocessed_nodes_file_name'],
+        }
+    )
+
+    load_edges_to_s3_task = PythonOperator(
+        task_id = "load_edges_to_s3_task",
+        python_callable=load_file_to_s3,
+        op_kwargs={
+            's3_conn_id': config['s3_conn_id'],
+            's3_bucket_name': config['s3_bucket_name'],
+            'file_local_path': config['edges_local_path'],
+            'preprocessed_file_name': config['preprocessed_edges_file_name'],
         }
     )
 
@@ -123,8 +132,9 @@ with DAG(
         }
     )
     download_from_s3_task >> [nodes_preprocess_task, edges_preprocess_task]
-    [nodes_preprocess_task, edges_preprocess_task] >> load_to_s3_task
-    load_to_s3_task >> load_to_neptune
+    nodes_preprocess_task >> load_nodes_to_s3_task
+    edges_preprocess_task >> load_edges_to_s3_task
+    [load_nodes_to_s3_task, load_edges_to_s3_task] >> load_to_neptune
     load_to_neptune >> [shortest_path_task, community_detection_task]
     [shortest_path_task, community_detection_task] >> final_df_creation_task
 
