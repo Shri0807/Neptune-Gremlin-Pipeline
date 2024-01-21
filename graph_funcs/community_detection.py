@@ -6,7 +6,9 @@ def leiden_comm(**kwargs):
     edges_path = kwargs["edges_local_path"] + kwargs["preprocessed_edges_file_name"]
 
     df = pd.read_csv(edges_path) 
-    df['weight'] = df['weight'].astype(int)
+
+    print(df.head(10))
+    # df['weight'] = df['weight'].astype(int)
     # Create a graph from the results returned
     g = ig.Graph.TupleList(df.itertuples(index=False), directed=False, weights=True)
 
