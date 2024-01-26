@@ -7,6 +7,16 @@ from gremlin_python.driver.aiohttp.transport import AiohttpTransport
 from gremlin_python.process.traversal import *
 
 def connect_to_neptune(endpoint):
+    """
+    Description:
+        A function to establish remote connection to Amazon Neptune Graph Database and return the graph traversal source
+
+    Parameters:
+        endpoint: URL of Neptune Graph DB
+    
+    Returns:
+        g: Graph Traversal source
+    """
     # connect to Neptune DB instance
     graph=Graph()
     connection = DriverRemoteConnection(endpoint, 'g',
