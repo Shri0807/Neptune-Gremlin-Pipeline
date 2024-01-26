@@ -1,5 +1,6 @@
 import sys
 
+#Add helper_funcs and graph_funcs to system path
 sys.path.insert(0, "/root/Neptune-Gremlin-Pipeline/helper_funcs")
 sys.path.insert(0, "/root/Neptune-Gremlin-Pipeline/graph_funcs")
 
@@ -15,6 +16,7 @@ from load_data import load_data_neptune
 from shortest_path import shortest_path
 from community_detection import leiden_comm
 
+#Read Config File
 config = read_yaml("/root/Neptune-Gremlin-Pipeline/config/config.yaml")
 config = config['development']
 
@@ -27,6 +29,7 @@ default_args = {
     'retry_delay': timedelta(minutes=5),
 }
 
+#DAG Defenition
 with DAG(
     default_args=default_args,
     dag_id="neptune_dag_v1",
@@ -150,7 +153,3 @@ with DAG(
     load_to_neptune >> [shortest_path_task, community_detection_task]
     [shortest_path_task, community_detection_task] >> final_df_creation_task
     final_df_creation_task >> load_output_to_s3_task
-
-
-
-    
