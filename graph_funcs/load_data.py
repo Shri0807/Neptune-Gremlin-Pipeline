@@ -3,15 +3,23 @@ import requests, json
 
 def load_data_neptune(**kwargs):
     """
+    Description:
+        A function to load data into Neptune Database from an S3 source. 
+    
     Parameters:
-        endpoint: Endpoint of Neptune Database
+        s3_bucket_name: Bucket Name of S3 Bucket
+        preprocessed_nodes_file_name: Name of the file to be loaded on Neptune
+        server: Server Name of Neptune Database
+        port: Port Number of Neptune Database (Default=8182)
+        loading_endpoint: Loading Endpoint of Neptune Database (/loader)
         source: S3 File URI
-        iam_role: arm of IAM Role for Read Data from S3
+        iam_role: arn of IAM Role for Read Data from S3
 
     Returns:
-        status_code: 200 = success
+        status_code: HTTP status code indicating the success of the data loading process.
+                     200 = Success, Other codes = Failure.
     """
-    # source = "s3://shrikant-neptune-testing/Data_02_09_2023/nodes.csv"
+
     source = f"s3://{kwargs['s3_bucket_name']}/{kwargs['preprocessed_nodes_file_name']}"
     loading_endpoint = f"https://{kwargs['server']}:{int(kwargs['port'])}/{kwargs['loading_endpoint']}"
 
