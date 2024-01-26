@@ -2,13 +2,26 @@ import igraph as ig
 import pandas as pd
 
 def leiden_comm(**kwargs):
+    """
+    Description:
+        Function to compute leiden community detection on Graph and assign cluster_id to each node
+        Ensure the weights column to be of type integer
+    
+    Parameters:
+        edges_local_path: Path to the edges data directory
+        preprocessed_edges_file_name: Preprocessed Edges File Name
+
+    Return:
+        new_df: Dataframe with Nodes and Cluster_id assigned to each node by leiden community detection algorithm
+    """
 
     edges_path = kwargs["edges_local_path"] + kwargs["preprocessed_edges_file_name"]
 
     df = pd.read_csv(edges_path) 
 
-    print(df.head(10))
     df['weight:Int'] = df['weight:Int'].astype(int)
+
+
     # Create a graph from the results returned
     g = ig.Graph.TupleList(df.itertuples(index=False), directed=False, weights=True)
 
