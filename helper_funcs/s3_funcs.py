@@ -1,8 +1,25 @@
 from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 import os
 
-# Define the function to read the file from S3
+
 def read_file_from_s3(**kwargs):
+
+    """
+    Description:
+        A function to download files from Amazon S3 to the local file system using an S3Hook.
+    
+    Parameters:
+        s3_conn_id: Airflow connection ID for Amazon S3.
+        s3_bucket_name: Name of the Amazon S3 bucket.
+        s3_nodes_file_name: Name of the nodes file in the S3 bucket.
+        s3_edges_file_name: Name of the edges file in the S3 bucket.
+        local_nodes_file_path: Local path for storing the downloaded nodes file.
+        local_edges_file_path: Local path for storing the downloaded edges file.
+    
+    Returns:
+        None
+    """
+
     # Create an S3Hook to interact with Amazon S3
     s3_hook = S3Hook(aws_conn_id=kwargs["s3_conn_id"])
 
@@ -18,13 +35,23 @@ def read_file_from_s3(**kwargs):
         print("Edges Download Failed")
 
 def load_file_to_s3(**kwargs):
+    """
+    Description:
+        A function to upload a preprocessed file to Amazon S3 using an S3Hook.
+
+    Parameters:
+        s3_conn_id: Airflow connection ID for Amazon S3.
+        s3_bucket_name: Name of the Amazon S3 bucket.
+        file_local_path: Local path to the preprocessed file for upload.
+        preprocessed_file_name: Name of the preprocessed file.
+    
+    Returns:
+        None
+    """
     s3_hook = S3Hook(aws_conn_id=kwargs["s3_conn_id"])
 
     filename = kwargs["file_local_path"] + kwargs["preprocessed_file_name"]
     s3_hook.load_file(filename=filename, bucket_name=kwargs["s3_bucket_name"], key=kwargs["preprocessed_file_name"], replace=True)
-
-    # filename = kwargs["edges_local_path"] + kwargs["preprocessed_edges_file_name"]
-    # s3_hook.load_file(filename=filename, bucket_name=kwargs["s3_bucket_name"], key=kwargs["preprocessed_edges_file_name"], replace=True)
 
 
     
